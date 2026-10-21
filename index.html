@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التحديات البرمجية الشاملة</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f7f8fa;
+            --card-bg: #ffffff;
+            --text-main: #2b2b2b;
+            --text-muted: #666666;
+            --gold-primary: #d4af37;
+            --gold-light: #fefcf5;
+            --gold-dark: #b89524;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 20px rgba(212, 175, 55, 0.12);
+            --console-bg: #fdfbf7;
+            --console-text: #8a6d1b;
+            --console-border: #e6d5a7;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121316;
+            --card-bg: #1c1e24;
+            --text-main: #e2e8f0;
+            --text-muted: #a0aec0;
+            --gold-primary: #e6c547;
+            --gold-light: #282415;
+            --gold-dark: #cca122;
+            --border-color: #2d3748;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --console-bg: #18191d;
+            --console-text: #f0c961;
+            --console-border: #4a3e1b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            transition: background 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+        }
+
+        /* صفحة تسجيل الدخول */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            padding: 30px 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border: 2px solid var(--gold-primary);
+        }
+
+        .login-card .avatar {
+            width: 70px;
+            height: 70px;
+            background: var(--gold-light);
+            border: 2px solid var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px auto;
+            color: var(--gold-primary);
+            font-size: 2rem;
+        }
+
+        .login-card h2 {
+            margin-bottom: 20px;
+            color: var(--gold-primary);
+            font-size: 1.4rem;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+            text-align: right;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .login-card input:focus {
+            border-color: var(--gold-primary);
+        }
+
+        /* الهيدر وبطاقة التعريف */
+        header {
+            width: 100%;
+            max-width: 950px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 12px 18px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-bottom: 3px solid var(--gold-primary);
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h1 i {
+            color: var(--gold-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: var(--gold-light);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        /* بطاقة معلومات الطالب (Profile Card) */
+        .id-card {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 12px 18px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gold-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .id-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .id-avatar {
+            width: 42px;
+            height: 42px;
+            background: var(--gold-light);
+            border: 2px solid var(--gold-primary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold-primary);
+            font-size: 1.2rem;
+        }
+
+        .id-details h3 {
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        .id-details p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .id-details span {
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        /* تبويبات الأسابيع */
+        .tabs-container {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            max-width: 950px;
+            margin-bottom: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #ffffff;
+            border-color: var(--gold-primary);
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 950px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .main-container.active {
+            display: flex;
+        }
+
+        /* مصغر: مربعات التمارين */
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 12px 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            color: var(--text-main);
+            font-size: 1rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card h2 i {
+            color: var(--gold-primary);
+        }
+
+        .description {
+            line-height: 1.4;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .alert-box {
+            background: var(--gold-light);
+            border-right: 3px solid var(--gold-primary);
+            padding: 6px 10px;
+            border-radius: 5px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .input-group input {
+            flex: 1;
+            min-width: 80px;
+            padding: 6px 10px;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #ffffff;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* صندوق النتيجة */
+        .result-container {
+            background: var(--console-bg);
+            color: var(--console-text);
+            padding: 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            min-height: 50px;
+            max-height: 180px;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1.5px dashed var(--console-border);
+            margin-top: 6px;
+            direction: ltr;
+        }
+
+        .error-msg {
+            color: #e53e3e;
+            font-weight: bold;
+            direction: rtl;
+        }
+
+        /* نافذة الخروج المخصصة */
+        .custom-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 2px solid var(--gold-primary);
+            border-radius: 14px;
+            padding: 22px 25px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .modal-card i {
+            font-size: 2.2rem;
+            color: var(--gold-primary);
+            margin-bottom: 10px;
+        }
+
+        .modal-card p {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 18px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-modal-confirm {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-modal-cancel {
+            background: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 8px; }
+            header h1 { font-size: 0.95rem; }
+            .card { padding: 10px; }
+            .id-card { flex-direction: column; text-align: center; }
+            .id-info { flex-direction: column; }
+            .btn-gold { width: 100%; justify-content: center; }
+            .tab-btn { font-size: 0.78rem; padding: 6px; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- نافذة تأكيد الخروج المخصصة -->
+    <div id="logoutModal" class="custom-modal">
+        <div class="modal-card">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <p>هل أنت متأكد من تسجيل الخروج؟</p>
+            <div class="modal-actions">
+                <button class="btn-modal-confirm" onclick="confirmLogout()">موافق</button>
+                <button class="btn-modal-cancel" onclick="closeLogoutModal()">إلغاء الأمر</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <div class="avatar"><i class="fa-solid fa-user-graduate"></i></div>
+            <h2>تسجيل الدخول للمنصة</h2>
+            <div class="form-group">
+                <label>اسم الطالب الكامل:</label>
+                <input type="text" id="studentName" placeholder="أدخل اسمك...">
+            </div>
+            <div class="form-group">
+                <label>العمر:</label>
+                <input type="number" id="studentAge" placeholder="مثال: 22" min="1">
+            </div>
+            <div class="form-group">
+                <label>التخصص:</label>
+                <input type="text" id="studentMajor" placeholder="مثال: علوم حاسوب">
+            </div>
+            <button class="btn-gold" style="width: 100%; justify-content: center; margin-top: 10px;" onclick="login()">دخول ومتابعة</button>
+        </div>
+    </div>
+
+    <!-- الهيدر العلوي -->
+    <header>
+        <h1><i class="fa-solid fa-code"></i> منصة التحديات البرمجية</h1>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="toggleTheme()" title="تغيير المظهر"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+            <button class="icon-btn" onclick="openLogoutModal()" title="تسجيل الخروج"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+    </header>
+
+    <!-- البطاقة التعريفية للطالب -->
+    <div class="id-card">
+        <div class="id-info">
+            <div class="id-avatar"><i class="fa-solid fa-id-badge"></i></div>
+            <div class="id-details">
+                <h3 id="cardName">اسم الطالب</h3>
+                <p>العمر: <span id="cardAge">---</span> | التخصص: <span id="cardMajor">---</span></p>
+            </div>
+        </div>
+        <div style="font-weight: 700; color: var(--gold-primary); font-size: 0.85rem;">
+            <i class="fa-solid fa-circle-check"></i> حساب نشط
+        </div>
+    </div>
+
+    <!-- تبويبات الأسابيع والتحديات -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchTab('week1', this)"><i class="fa-solid fa-trophy"></i> التحدي الأول</button>
+        <button class="tab-btn" onclick="switchTab('week2', this)"><i class="fa-solid fa-shapes"></i> التحدي الثاني</button>
+        <button class="tab-btn" onclick="switchTab('week3', this)"><i class="fa-solid fa-star"></i> التحدي الثالث</button>
+    </div>
+
+    <!-- ================= التحدي الأول ================= -->
+    <div id="week1" class="main-container active">
+        <!-- تمرين 1 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-layer-group"></i> التمرين الأول: مثلث تصاعدي (يسار)</h2>
+            <p class="description">اكتب برنامجاً لرسم مثلث نجوم يتزايد تدريجياً من سطر لآخر.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: يجب أن يكون المدخل عدداً أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر:</label><input type="number" id="w1_r1" min="1" value="5">
+                <button class="btn-gold" onclick="runW1_1()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w1_out1" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 2 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-align-right"></i> التمرين الثاني: مثلث تصاعدي (يمين)</h2>
+            <p class="description">اكتب برنامجاً لرسم مثلث نجوم محاذاة لليمين باستخدام المسافات.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: يجب أن يكون المدخل عدداً أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر:</label><input type="number" id="w1_r2" min="1" value="5">
+                <button class="btn-gold" onclick="runW1_2()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w1_out2" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 3 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-square-minus"></i> التمرين الثالث: مثلث مقلوب (يسار)</h2>
+            <p class="description">اكتب برنامجاً لرسم مثلث نجوم تنازلي يبدأ بأكبر عدد وينتهي بنجمة واحدة.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: يجب أن يكون المدخل عدداً أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر:</label><input type="number" id="w1_r3" min="1" value="5">
+                <button class="btn-gold" onclick="runW1_3()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w1_out3" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 4 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-indent"></i> التمرين الرابع: مثلث مقلوب (يمين)</h2>
+            <p class="description">اكتب برنامجاً لرسم مثلث نجوم تنازلي ومحاذٍ لليمين بزيادة المسافات.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: يجب أن يدخل المستخدم عدداً أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر:</label><input type="number" id="w1_r4" min="1" value="5">
+                <button class="btn-gold" onclick="runW1_4()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w1_out4" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 5 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-table-cells"></i> التمرين الخامس: متوازي الأضلاع المائل</h2>
+            <p class="description">اكتب برنامجاً لرسم شريط مائل بتحديد الأسطر والأعمدة.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: يجب إدخال عددين أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>الأسطر:</label><input type="number" id="w1_r5" min="1" value="5">
+                <label>الأعمدة:</label><input type="number" id="w1_c5" min="1" value="8">
+                <button class="btn-gold" onclick="runW1_5()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w1_out5" class="result-container"></div>
+        </div>
+    </div>
+
+    <!-- ================= التحدي الثاني ================= -->
+    <div id="week2" class="main-container">
+        <!-- تمرين 1 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-draw-polygon"></i> التمرين الأول: متوازي أضلاع مائل 2</h2>
+            <p class="description">رسم شريط مائل للأسطر والأعمدة.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: أعداد أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>الأسطر:</label><input type="number" id="w2_r1" min="1" value="5">
+                <label>الأعمدة:</label><input type="number" id="w2_c1" min="1" value="8">
+                <button class="btn-gold" onclick="runW2_1()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w2_out1" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 2 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-caret-up"></i> التمرين الثاني: الهرم المتناظر (Pyramid)</h2>
+            <p class="description">رسم هرم بزيادة نجمتين كل سطر.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: مدخل أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر:</label><input type="number" id="w2_r2" min="1" value="6">
+                <button class="btn-gold" onclick="runW2_2()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w2_out2" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 3 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-caret-down"></i> التمرين الثالث: الهرم المقلوب</h2>
+            <p class="description">رسم هرم مقلوب تنازلي.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: مدخل أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر:</label><input type="number" id="w2_r3" min="1" value="6">
+                <button class="btn-gold" onclick="runW2_3()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w2_out3" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 4 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-angle-right"></i> التمرين الرابع: السهم المزدوج الأيسر</h2>
+            <p class="description">شكل يتزايد ثم يتناقص عمودياً.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط هام: يجب أن يكون عدد الأسطر **عدداً فردياً** أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر (فردي):</label><input type="number" id="w2_r4" min="1" value="7" step="2">
+                <button class="btn-gold" onclick="runW2_4()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w2_out4" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 5 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-angle-left"></i> التمرين الخامس: السهم المزدوج الأيمن</h2>
+            <p class="description">شكل يتزايد ثم يتناقص محاذاة لليمين.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط هام: يجب أن يكون عدد الأسطر **عدداً فردياً** أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر (فردي):</label><input type="number" id="w2_r5" min="1" value="7" step="2">
+                <button class="btn-gold" onclick="runW2_5()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w2_out5" class="result-container"></div>
+        </div>
+    </div>
+
+    <!-- ================= التحدي الثالث ================= -->
+    <div id="week3" class="main-container">
+        <!-- تمرين 1 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-diamond"></i> التمرين الأول: شكل المعين الكامل (Diamond)</h2>
+            <p class="description">رسم معين متكامل الأركان.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط هام: يجب أن يكون عدد الأسطر **عدداً فردياً** أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر (فردي):</label><input type="number" id="w3_r1" min="1" value="7" step="2">
+                <button class="btn-gold" onclick="runW3_1()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w3_out1" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 2 -->
+        <div class="card">
+            <h2><i class="fa-regular fa-diamond"></i> التمرين الثاني: المعين المفرغ (Hollow Diamond)</h2>
+            <p class="description">رسم حدود المعين الخارجية فقط.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط هام: يجب أن يكون عدد الأسطر **عدداً فردياً** أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر (فردي):</label><input type="number" id="w3_r2" min="1" value="7" step="2">
+                <button class="btn-gold" onclick="runW3_2()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w3_out2" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 3 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-asterisk"></i> التمرين الثالث: معين مفرغ بالشرطات (-)</h2>
+            <p class="description">رسم معين مفرغ بالفراغات بشرطات.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط هام: يجب أن يكون عدد الأسطر **عدداً فردياً** أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>عدد الأسطر (فردي):</label><input type="number" id="w3_r3" min="1" value="7" step="2">
+                <button class="btn-gold" onclick="runW3_3()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w3_out3" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 4 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-square"></i> التمرين الرابع: المربع المفرغ (Hollow Square)</h2>
+            <p class="description">رسم إطار مربع متساوي الأبعاد.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: يجب إدخال عدد أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>طول الضلع:</label><input type="number" id="w3_r4" min="1" value="7">
+                <button class="btn-gold" onclick="runW3_4()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w3_out4" class="result-container"></div>
+        </div>
+
+        <!-- تمرين 5 -->
+        <div class="card">
+            <h2><i class="fa-solid fa-rectangle-xmark"></i> التمرين الخامس: المستطيل المفرغ</h2>
+            <p class="description">رسم إطار مستطيل بأبعاد مستقلة.</p>
+            <div class="alert-box"><i class="fa-solid fa-triangle-exclamation"></i> شرط التحقق: أعداد أكبر من الصفر.</div>
+            <div class="input-group">
+                <label>الأسطر:</label><input type="number" id="w3_r5" min="1" value="5">
+                <label>الأعمدة:</label><input type="number" id="w3_c5" min="1" value="12">
+                <button class="btn-gold" onclick="runW3_5()"><i class="fa-solid fa-play"></i> اطلع النتيجة</button>
+            </div>
+            <div id="w3_out5" class="result-container"></div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            checkUser();
+        };
+
+        function checkUser() {
+            const savedName = localStorage.getItem('std_name');
+            const savedAge = localStorage.getItem('std_age');
+            const savedMajor = localStorage.getItem('std_major');
+
+            if(savedName && savedAge) {
+                document.getElementById('cardName').textContent = savedName;
+                document.getElementById('cardAge').textContent = savedAge;
+                document.getElementById('cardMajor').textContent = savedMajor || 'غير محدد';
+                document.getElementById('loginScreen').style.display = 'none';
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+            }
+        }
+
+        function login() {
+            const name = document.getElementById('studentName').value.trim();
+            const age = document.getElementById('studentAge').value.trim();
+            const major = document.getElementById('studentMajor').value.trim();
+
+            if(!name || !age) {
+                alert('لطفاً، قم بإدخال الاسم والعمر!');
+                return;
+            }
+
+            localStorage.setItem('std_name', name);
+            localStorage.setItem('std_age', age);
+            localStorage.setItem('std_major', major);
+
+            checkUser();
+        }
+
+        function openLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function confirmLogout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeIcon');
+            if(body.getAttribute('data-theme') === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                icon.className = 'fa-solid fa-sun';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.className = 'fa-solid fa-moon';
+            }
+        }
+
+        function switchTab(weekId, btn) {
+            document.querySelectorAll('.main-container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(weekId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // ================= التحدي الأول =================
+        function runW1_1() {
+            let r = parseInt(document.getElementById('w1_r1').value);
+            let out = document.getElementById('w1_out1');
+            if(isNaN(r) || r <= 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب إدخال عدد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=1; i<=r; i++) res += '* '.repeat(i) + '\n';
+            out.textContent = res;
+        }
+        function runW1_2() {
+            let r = parseInt(document.getElementById('w1_r2').value);
+            let out = document.getElementById('w1_out2');
+            if(isNaN(r) || r <= 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب إدخال عدد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=1; i<=r; i++) res += '  '.repeat(r - i) + '* '.repeat(i) + '\n';
+            out.textContent = res;
+        }
+        function runW1_3() {
+            let r = parseInt(document.getElementById('w1_r3').value);
+            let out = document.getElementById('w1_out3');
+            if(isNaN(r) || r <= 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب إدخال عدد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=r; i>=1; i--) res += '* '.repeat(i) + '\n';
+            out.textContent = res;
+        }
+        function runW1_4() {
+            let r = parseInt(document.getElementById('w1_r4').value);
+            let out = document.getElementById('w1_out4');
+            if(isNaN(r) || r <= 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب إدخال عدد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=r; i>=1; i--) res += '  '.repeat(r - i) + '* '.repeat(i) + '\n';
+            out.textContent = res;
+        }
+        function runW1_5() {
+            let r = parseInt(document.getElementById('w1_r5').value);
+            let c = parseInt(document.getElementById('w1_c5').value);
+            let out = document.getElementById('w1_out5');
+            if(isNaN(r) || r <= 0 || isNaN(c) || c <= 0) { out.innerHTML = '<span class="error-msg">خطأ: أدخل أعداد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=0; i<r; i++) res += '  '.repeat(i) + '* '.repeat(c) + '\n';
+            out.textContent = res;
+        }
+
+        // ================= التحدي الثاني =================
+        function runW2_1() {
+            let r = parseInt(document.getElementById('w2_r1').value);
+            let c = parseInt(document.getElementById('w2_c1').value);
+            let out = document.getElementById('w2_out1');
+            if(isNaN(r) || r <= 0 || isNaN(c) || c <= 0) { out.innerHTML = '<span class="error-msg">خطأ: أعداد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=0; i<r; i++) res += '  '.repeat(i) + '* '.repeat(c) + '\n';
+            out.textContent = res;
+        }
+        function runW2_2() {
+            let r = parseInt(document.getElementById('w2_r2').value);
+            let out = document.getElementById('w2_out2');
+            if(isNaN(r) || r <= 0) { out.innerHTML = '<span class="error-msg">خطأ: أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=1; i<=r; i++) res += '  '.repeat(r - i) + '* '.repeat(2 * i - 1) + '\n';
+            out.textContent = res;
+        }
+        function runW2_3() {
+            let r = parseInt(document.getElementById('w2_r3').value);
+            let out = document.getElementById('w2_out3');
+            if(isNaN(r) || r <= 0) { out.innerHTML = '<span class="error-msg">خطأ: أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=r; i>=1; i--) res += '  '.repeat(r - i) + '* '.repeat(2 * i - 1) + '\n';
+            out.textContent = res;
+        }
+        function runW2_4() {
+            let r = parseInt(document.getElementById('w2_r4').value);
+            let out = document.getElementById('w2_out4');
+            if(isNaN(r) || r <= 0 || r % 2 === 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب أن يكون عدداً **فردياً** وأكبر من الصفر!</span>'; return; }
+            let res = '';
+            let mid = Math.ceil(r / 2);
+            for(let i=1; i<=mid; i++) res += '* '.repeat(i) + '\n';
+            for(let i=mid-1; i>=1; i--) res += '* '.repeat(i) + '\n';
+            out.textContent = res;
+        }
+        function runW2_5() {
+            let r = parseInt(document.getElementById('w2_r5').value);
+            let out = document.getElementById('w2_out5');
+            if(isNaN(r) || r <= 0 || r % 2 === 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب أن يكون عدداً **فردياً** وأكبر من الصفر!</span>'; return; }
+            let res = '';
+            let mid = Math.ceil(r / 2);
+            for(let i=1; i<=mid; i++) res += '  '.repeat(mid - i) + '* '.repeat(i) + '\n';
+            for(let i=mid-1; i>=1; i--) res += '  '.repeat(mid - i) + '* '.repeat(i) + '\n';
+            out.textContent = res;
+        }
+
+        // ================= التحدي الثالث =================
+        function runW3_1() {
+            let r = parseInt(document.getElementById('w3_r1').value);
+            let out = document.getElementById('w3_out1');
+            if(isNaN(r) || r <= 0 || r % 2 === 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب أن يكون عدداً **فردياً** وأكبر من الصفر!</span>'; return; }
+            let res = '';
+            let mid = Math.ceil(r / 2);
+            for(let i=1; i<=mid; i++) res += '  '.repeat(mid - i) + '* '.repeat(2 * i - 1) + '\n';
+            for(let i=mid-1; i>=1; i--) res += '  '.repeat(mid - i) + '* '.repeat(2 * i - 1) + '\n';
+            out.textContent = res;
+        }
+        function runW3_2() {
+            let r = parseInt(document.getElementById('w3_r2').value);
+            let out = document.getElementById('w3_out2');
+            if(isNaN(r) || r <= 0 || r % 2 === 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب أن يكون عدداً **فردياً** وأكبر من الصفر!</span>'; return; }
+            let res = '';
+            let mid = Math.ceil(r / 2);
+            for(let i=1; i<=r; i++) {
+                let dist = Math.abs(mid - i);
+                let outer = dist;
+                let inner = (mid - dist - 1) * 2 - 1;
+                if(inner < 0) {
+                    res += '  '.repeat(outer) + '*\n';
+                } else {
+                    res += '  '.repeat(outer) + '* ' + '  '.repeat(inner) + '*\n';
+                }
+            }
+            out.textContent = res;
+        }
+        function runW3_3() {
+            let r = parseInt(document.getElementById('w3_r3').value);
+            let out = document.getElementById('w3_out3');
+            if(isNaN(r) || r <= 0 || r % 2 === 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب أن يكون عدداً **فردياً** وأكبر من الصفر!</span>'; return; }
+            let res = '';
+            let mid = Math.ceil(r / 2);
+            for(let i=1; i<=r; i++) {
+                let dist = Math.abs(mid - i);
+                let outer = dist;
+                let inner = (mid - dist - 1) * 2 - 1;
+                if(inner < 0) {
+                    res += '- '.repeat(outer) + '* ' + '- '.repeat(outer) + '\n';
+                } else {
+                    res += '- '.repeat(outer) + '* ' + '- '.repeat(inner) + '* ' + '- '.repeat(outer) + '\n';
+                }
+            }
+            out.textContent = res;
+        }
+        function runW3_4() {
+            let r = parseInt(document.getElementById('w3_r4').value);
+            let out = document.getElementById('w3_out4');
+            if(isNaN(r) || r <= 0) { out.innerHTML = '<span class="error-msg">خطأ: يجب إدخال عدد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=1; i<=r; i++) {
+                for(let j=1; j<=r; j++) {
+                    if(i===1 || i===r || j===1 || j===r) res += '* ';
+                    else res += '  ';
+                }
+                res += '\n';
+            }
+            out.textContent = res;
+        }
+        function runW3_5() {
+            let r = parseInt(document.getElementById('w3_r5').value);
+            let c = parseInt(document.getElementById('w3_c5').value);
+            let out = document.getElementById('w3_out5');
+            if(isNaN(r) || r <= 0 || isNaN(c) || c <= 0) { out.innerHTML = '<span class="error-msg">خطأ: أدخل أعداد أكبر من الصفر!</span>'; return; }
+            let res = '';
+            for(let i=1; i<=r; i++) {
+                for(let j=1; j<=c; j++) {
+                    if(i===1 || i===r || j===1 || j===c) res += '* ';
+                    else res += '  ';
+                }
+                res += '\n';
+            }
+            out.textContent = res;
+        }
+    </script>
+</body>
+</html>
